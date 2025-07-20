@@ -14,6 +14,7 @@ from typing import Dict, Any, Optional, List
 from urllib.parse import quote
 from pathlib import Path
 from datetime import datetime, timedelta
+import sys
 
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import (
@@ -49,6 +50,22 @@ logger = logging.getLogger(__name__)
 # Configuration
 BOT_TOKEN = os.getenv('BOT_TOKEN')
 FIREBASE_CREDENTIALS_PATH = os.getenv('FIREBASE_CREDENTIALS_PATH', 'firebase_credidentials.json')
+
+# --- RUNTIME PYTHON VERSION CHECK (REQUIRED FOR RENDER) ---
+if not (sys.version_info.major == 3 and (sys.version_info.minor == 10 or sys.version_info.minor == 11)):
+    print(f"\n❌ ERROR: Python {sys.version_info.major}.{sys.version_info.minor} detected. This bot requires Python 3.10 or 3.11 due to library compatibility.\nPlease set up a runtime.txt with 'python-3.10.14' or 'python-3.11.9' for Render or your deployment environment.\n")
+    sys.exit(1)
+
+# --- BOT TOKEN CHECK ---
+if not BOT_TOKEN:
+    print("\n❌ ERROR: BOT_TOKEN environment variable not set!\n🔑 Please set your bot token in the Render dashboard or your environment.\n")
+    sys.exit(1)
+
+# --- FIREBASE CREDENTIALS CHECK ---
+if FIREBASE_AVAILABLE:
+    if not os.path.exists(FIREBASE_CREDENTIALS_PATH):
+        print(f"\n❌ ERROR: Firebase credentials file not found at '{FIREBASE_CREDENTIALS_PATH}'.\nPlease upload your credentials as a Render Secret File or place it in the correct path.\n")
+        sys.exit(1)
 
 # Conversation states
 NAME, AGE, GENDER, STATE, DIET_TYPE, MEDICAL_CONDITION, ACTIVITY_LEVEL, MEAL_PLAN, WEEK_PLAN, GROCERY_LIST, RATING, GROCERY_MANAGE, CART, PROFILE = range(14)
