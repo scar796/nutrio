@@ -1,0 +1,58 @@
+[
+  {
+    "Food Item": "Vada Pav",
+    "Ingredients": ["potato", "bread", "spices", "oil", "onion"],
+    "approx_calories": 280,
+    "Health Impact": "High in carbs, good for energy",
+    "Calorie Level": "medium"
+  },
+  {
+    "Food Item": "Misal Pav",
+    "Ingredients": ["sprouts", "bread", "spices", "onion", "tomato"],
+    "approx_calories": 320,
+    "Health Impact": "High in protein and fiber, nutritious",
+    "Calorie Level": "medium"
+  },
+  {
+    "Food Item": "Puran Poli",
+    "Ingredients": ["wheat flour", "jaggery", "ghee", "cardamom"],
+    "approx_calories": 250,
+    "Health Impact": "Traditional sweet, moderate calories",
+    "Calorie Level": "medium"
+  },
+  {
+    "Food Item": "Bharli Vangi",
+    "Ingredients": ["brinjal", "peanuts", "spices", "onion", "garlic"],
+    "approx_calories": 180,
+    "Health Impact": "Low calorie, high in fiber",
+    "Calorie Level": "low"
+  },
+  {
+    "Food Item": "Poha",
+    "Ingredients": ["flattened rice", "onion", "peanuts", "spices", "curry leaves"],
+    "approx_calories": 200,
+    "Health Impact": "Light breakfast, easy to digest",
+    "Calorie Level": "low"
+  },
+  {
+    "Food Item": "Bombay Duck Curry",
+    "Ingredients": ["fish", "spices", "onion", "tomato", "garlic"],
+    "approx_calories": 220,
+    "Health Impact": "High in protein and omega-3",
+    "Calorie Level": "low"
+  },
+  {
+    "Food Item": "Sabudana Khichdi",
+    "Ingredients": ["sago pearls", "peanuts", "potato", "spices", "curry leaves"],
+    "approx_calories": 240,
+    "Health Impact": "Good for fasting, light meal",
+    "Calorie Level": "medium"
+  },
+  {
+    "Food Item": "Maharashtrian Chicken Curry",
+    "Ingredients": ["chicken", "spices", "onion", "tomato", "garlic"],
+    "approx_calories": 300,
+    "Health Impact": "High in protein, good for muscle building",
+    "Calorie Level": "medium"
+  }
+]       

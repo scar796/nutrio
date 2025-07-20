@@ -1,0 +1,76 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [3.8, 3.9, "3.10", "3.11"]
+
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+    
+    - name: Cache pip dependencies
+      uses: actions/cache@v3
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install flake8 pytest
+    
+    - name: Lint with flake8
+      run: |
+        # stop the build if there are Python syntax errors or undefined names
+        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+        # exit-zero treats all errors as warnings
+        flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+    
+    - name: Check for syntax errors
+      run: |
+        python -m py_compile main.py
+    
+    - name: Test with pytest
+      run: |
+        pytest --version
+        # Add actual tests when they are created
+        # pytest tests/
+    
+    - name: Check environment setup
+      run: |
+        python -c "import telegram; print('Telegram bot library version:', telegram.__version__)"
+        python -c "import dotenv; print('Python-dotenv available')"
+        python -c "try: import firebase_admin; print('Firebase admin available'); except ImportError: print('Firebase admin not available')"
+    
+    - name: Validate JSON files
+      run: |
+        python -c "import json; json.load(open('karnataka.json')); print('karnataka.json is valid')"
+        python -c "import json; json.load(open('maharastra.json')); print('maharastra.json is valid')"
+    
+    - name: Check for sensitive data
+      run: |
+        if grep -r "BOT_TOKEN" . --exclude-dir=.git --exclude=*.md; then
+          echo "ERROR: Bot token found in code!"
+          exit 1
+        fi
+        if grep -r "7681377819" . --exclude-dir=.git; then
+          echo "ERROR: Hardcoded bot token found!"
+          exit 1
+        fi
+        echo "No sensitive data found in code" 
