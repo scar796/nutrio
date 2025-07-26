@@ -36,13 +36,29 @@
 
 #### Step 3: Set Environment Variables
 In the Render dashboard, go to "Environment" tab:
-- **BOT_TOKEN**: Your Telegram bot token
-- **FIREBASE_CREDENTIALS_PATH**: `firebase_credidentials.json`
 
-#### Step 4: Upload Firebase Credentials
-1. Go to "Files" tab in Render
-2. Upload your `firebase_credidentials.json` as a Secret File
-3. Set the mount path to: `firebase_credidentials.json`
+**Required:**
+- **BOT_TOKEN**: Your Telegram bot token
+
+**Optional (for Firebase):**
+- **type**: `service_account`
+- **project_id**: Your Firebase project ID
+- **private_key_id**: Your Firebase private key ID
+- **private_key**: Your Firebase private key (with `\\n` for newlines)
+- **client_email**: Your Firebase client email
+- **client_id**: Your Firebase client ID
+- **auth_uri**: `https://accounts.google.com/o/oauth2/auth`
+- **token_uri**: `https://oauth2.googleapis.com/token`
+- **auth_provider_x509_cert_url**: `https://www.googleapis.com/oauth2/v1/certs`
+- **client_x509_cert_url**: Your Firebase client certificate URL
+- **universe_domain**: `googleapis.com`
+
+#### Step 4: Firebase Setup (Optional)
+If you want Firebase functionality:
+1. Go to Firebase Console → Project Settings → Service Accounts
+2. Generate a new private key
+3. Copy the values from the JSON file to the environment variables above
+4. For `private_key`, replace actual newlines with `\\n`
 
 #### Step 5: Deploy
 1. Click "Create Background Worker"
@@ -80,7 +96,17 @@ docker run -e BOT_TOKEN=your_token nutrio-bot
 | Variable | Description | Required | Example |
 |----------|-------------|----------|---------|
 | `BOT_TOKEN` | Telegram bot token | ✅ | `1234567890:ABCdefGHIjklMNOpqrsTUVwxyz` |
-| `FIREBASE_CREDENTIALS_PATH` | Path to Firebase credentials | ❌ | `firebase_credidentials.json` |
+| `type` | Firebase service account type | ❌ | `service_account` |
+| `project_id` | Firebase project ID | ❌ | `your-project-123456` |
+| `private_key_id` | Firebase private key ID | ❌ | `abc123def456...` |
+| `private_key` | Firebase private key (with `\\n`) | ❌ | `-----BEGIN PRIVATE KEY-----\\n...\\n-----END PRIVATE KEY-----\\n` |
+| `client_email` | Firebase client email | ❌ | `firebase-adminsdk@project.iam.gserviceaccount.com` |
+| `client_id` | Firebase client ID | ❌ | `123456789012345678901` |
+| `auth_uri` | Firebase auth URI | ❌ | `https://accounts.google.com/o/oauth2/auth` |
+| `token_uri` | Firebase token URI | ❌ | `https://oauth2.googleapis.com/token` |
+| `auth_provider_x509_cert_url` | Firebase auth provider cert URL | ❌ | `https://www.googleapis.com/oauth2/v1/certs` |
+| `client_x509_cert_url` | Firebase client cert URL | ❌ | `https://www.googleapis.com/robot/v1/metadata/x509/...` |
+| `universe_domain` | Firebase universe domain | ❌ | `googleapis.com` |
 
 ## 📁 File Structure for Deployment
 
@@ -169,10 +195,11 @@ The bot includes built-in health checks:
 4. Check if service is running (green status)
 
 ### Firebase Issues
-1. Verify credentials file is uploaded
-2. Check Firebase project settings
-3. Ensure Firestore is enabled
-4. Check network connectivity
+1. Verify all Firebase environment variables are set correctly
+2. Check Firebase project settings and service account permissions
+3. Ensure Firestore is enabled in your Firebase project
+4. Verify the `private_key` has `\\n` instead of actual newlines
+5. Check network connectivity to Firebase services
 
 ### Performance Issues
 1. Monitor Render service metrics

@@ -8,8 +8,26 @@ services:
     envVars:
       - key: BOT_TOKEN
         sync: false
-      - key: FIREBASE_CREDENTIALS_PATH
-        value: firebase_credidentials.json
-    secretFiles:
-      - name: firebase_credidentials
-        mountPath: firebase_credidentials.json 
+      # Firebase environment variables (optional)
+      - key: type
+        value: service_account
+      - key: project_id
+        sync: false
+      - key: private_key_id
+        sync: false
+      - key: private_key
+        sync: false
+      - key: client_email
+        sync: false
+      - key: client_id
+        sync: false
+      - key: auth_uri
+        value: https://accounts.google.com/o/oauth2/auth
+      - key: token_uri
+        value: https://oauth2.googleapis.com/token
+      - key: auth_provider_x509_cert_url
+        value: https://www.googleapis.com/oauth2/v1/certs
+      - key: client_x509_cert_url
+        sync: false
+      - key: universe_domain
+        value: googleapis.com 

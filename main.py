@@ -63,9 +63,16 @@ if not BOT_TOKEN:
 
 # --- FIREBASE CREDENTIALS CHECK ---
 if FIREBASE_AVAILABLE:
-    if not os.path.exists(FIREBASE_CREDENTIALS_PATH):
-        print(f"\n❌ ERROR: Firebase credentials file not found at '{FIREBASE_CREDENTIALS_PATH}'.\nPlease upload your credentials as a Render Secret File or place it in the correct path.\n")
-        sys.exit(1)
+    # Check if Firebase credentials are available as environment variables
+    firebase_env_vars = [
+        "type", "project_id", "private_key_id", "private_key", 
+        "client_email", "client_id", "auth_uri", "token_uri", 
+        "auth_provider_x509_cert_url", "client_x509_cert_url", "universe_domain"
+    ]
+    
+    # Check if all required Firebase environment variables are set
+    if not all(os.getenv(var) for var in firebase_env_vars):
+        print(f"\n⚠️ WARNING: Firebase environment variables not set.\nThe bot will work without Firebase (profiles and ratings will be stored in memory only).\nTo enable Firebase, set these environment variables:\n{', '.join(firebase_env_vars)}\n")
 
 # Conversation states
 NAME, AGE, GENDER, STATE, DIET_TYPE, MEDICAL_CONDITION, ACTIVITY_LEVEL, MEAL_PLAN, WEEK_PLAN, GROCERY_LIST, RATING, GROCERY_MANAGE, CART, PROFILE = range(14)
@@ -90,12 +97,38 @@ MAX_REQUESTS_PER_WINDOW = 30  # 30 requests per minute
 # Firebase setup
 if FIREBASE_AVAILABLE:
     try:
-        # Initialize Firebase with credentials file if available
-        if os.path.exists(FIREBASE_CREDENTIALS_PATH):
+        # Check if Firebase credentials are available as environment variables
+        firebase_env_vars = [
+            "type", "project_id", "private_key_id", "private_key", 
+            "client_email", "client_id", "auth_uri", "token_uri", 
+            "auth_provider_x509_cert_url", "client_x509_cert_url", "universe_domain"
+        ]
+        
+        # Check if all required Firebase environment variables are set
+        if all(os.getenv(var) for var in firebase_env_vars):
+            # Initialize Firebase with environment variables
+            cred = credentials.Certificate({
+                "type": os.getenv("type"),
+                "project_id": os.getenv("project_id"),
+                "private_key_id": os.getenv("private_key_id"),
+                "private_key": os.getenv("private_key").replace('\\n', '\n'),
+                "client_email": os.getenv("client_email"),
+                "client_id": os.getenv("client_id"),
+                "auth_uri": os.getenv("auth_uri"),
+                "token_uri": os.getenv("token_uri"),
+                "auth_provider_x509_cert_url": os.getenv("auth_provider_x509_cert_url"),
+                "client_x509_cert_url": os.getenv("client_x509_cert_url"),
+                "universe_domain": os.getenv("universe_domain")
+            })
+            firebase_admin.initialize_app(cred)
+            db = firestore.client()
+            logger.info("✅ Firebase connected successfully with environment variables")
+        elif os.path.exists(FIREBASE_CREDENTIALS_PATH):
+            # Fallback to credentials file if environment variables are not set
             cred = credentials.Certificate(FIREBASE_CREDENTIALS_PATH)
             firebase_admin.initialize_app(cred)
             db = firestore.client()
-            logger.info("✅ Firebase connected successfully with credentials")
+            logger.info("✅ Firebase connected successfully with credentials file (fallback)")
         else:
             # Try to initialize without credentials (for testing)
             db = firestore.client()

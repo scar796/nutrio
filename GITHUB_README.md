@@ -67,10 +67,9 @@ docker run -e BOT_TOKEN=your_token nutrio-bot
 1. Fork this repository
 2. Create a new Background Worker on Render
 3. Set environment variables:
-   - `BOT_TOKEN`: Your Telegram bot token
-   - `FIREBASE_CREDENTIALS_PATH`: `firebase_credidentials.json`
-4. Upload Firebase credentials as Secret File
-5. Deploy! 🎉
+   - **Required**: `BOT_TOKEN` (your Telegram bot token)
+   - **Optional**: Firebase environment variables (see DEPLOYMENT.md for full list)
+4. Deploy! 🎉
 
 **Detailed deployment guide**: [DEPLOYMENT.md](DEPLOYMENT.md)
 
@@ -100,7 +99,17 @@ docker run -e BOT_TOKEN=your_token nutrio-bot
 | Variable | Description | Required |
 |----------|-------------|----------|
 | `BOT_TOKEN` | Telegram bot token | ✅ |
-| `FIREBASE_CREDENTIALS_PATH` | Firebase credentials file path | ❌ |
+| `type` | Firebase service account type | ❌ |
+| `project_id` | Firebase project ID | ❌ |
+| `private_key_id` | Firebase private key ID | ❌ |
+| `private_key` | Firebase private key (with `\\n`) | ❌ |
+| `client_email` | Firebase client email | ❌ |
+| `client_id` | Firebase client ID | ❌ |
+| `auth_uri` | Firebase auth URI | ❌ |
+| `token_uri` | Firebase token URI | ❌ |
+| `auth_provider_x509_cert_url` | Firebase auth provider cert URL | ❌ |
+| `client_x509_cert_url` | Firebase client cert URL | ❌ |
+| `universe_domain` | Firebase universe domain | ❌ |
 
 ### Features
 - **Rate Limiting**: 30 requests per minute per user
