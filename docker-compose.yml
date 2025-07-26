@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  nutrio-bot:
+    build: .
+    container_name: nutrio-bot
+    environment:
+      - BOT_TOKEN=${BOT_TOKEN}
+      - FIREBASE_CREDENTIALS_PATH=firebase_credidentials.json
+    volumes:
+      - ./firebase_credidentials.json:/app/firebase_credidentials.json:ro
+      - ./karnataka.json:/app/karnataka.json:ro
+      - ./maharastra.json:/app/maharastra.json:ro
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import requests; requests.get('https://api.telegram.org')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s 
